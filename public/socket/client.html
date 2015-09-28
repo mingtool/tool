@@ -1,0 +1,18 @@
+<script>
+var ws = new WebSocket("ws://127.0.0.1:9675");
+ws.onopen = function(){
+    console.log("success");
+
+    ws.send("lili");
+
+};
+ws.onmessage = function(e){
+    console.log("message:" + e.data);
+};
+ws.onerror = function(){
+    console.log("error");
+};
+
+
+
+</script>
