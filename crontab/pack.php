@@ -16,13 +16,11 @@
 /*
 a和A都是用来打包字符串的，它们的唯一区别就是当小于定长时的填充方式。
 a以NULL填充，NULL事实上是'\0'的表示，代表空字节，8个位上全是0。A以空格填充，空格也即ASCII码为32的字符
-
+bin2hex  将AC 码 转为二进制
 */
 $bin = pack("a", "d");
 echo "output: " . $bin . "\n";
 echo "output: 0x" . bin2hex($bin) . "\n";
-
-
 
 
 
