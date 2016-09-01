@@ -1,0 +1,79 @@
+<?php
+/* @var $exc \Yaf\Exception */
+$exc = $this->exc;
+
+//
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Error: <?php echo $exc->getCode(); ?></title>
+        <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link href="/static/assets/css/static.css" media="screen" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <h1><?php echo $exc->getCode(); ?></h1>
+        <h3>嘿, 哥们, 别睡了, 出大事啦</h3>
+        <hr/>
+        <div class="text-left">
+            <p>异常类名: <?php echo get_class($exc); ?></p>
+            <p>错误文件: <?php echo $exc->getFile(); ?></p>
+            <p>错误行数: <?php echo $exc->getLine(); ?></p>
+            <p>错误内容: <?php echo $this->_($exc->getMessage()); ?></p>
+        </div>
+        <hr />
+        <div class="text-left">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>File</th>
+                        <th>line</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $i = 1;
+
+                    foreach ($exc->getTrace() as $item):
+                        ?>
+                        <tr>
+                            <td><?php echo $i; ?>#</td>
+                            <td><?php echo isset($item['file']) ? $item['file'] : '-'; ?></td>
+                            <td><?php echo isset($item['line']) ? $item['line'] : '-'; ?></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <p>
+                                    <?php echo isset($item['class']) ? $item['class'] : '#'; ?>
+                                    <?php echo isset($item['type']) ? $this->_($item['type']) : '?' ?>
+                                    <?php echo isset($item['function']) ? $item['function'] : '#'; ?>(
+                                    <?php
+                                    if (isset($item['args'])):
+                                        $ii = count($item['args']);
+                                        ?>
+                                        <?php foreach ($item['args'] as $arg): ?>
+                                            <?php echo $this->_(var_export($arg, true)); ?>
+                                            <?php
+                                            $ii--;
+                                            echo (0 < $ii) ? ',' : '';
+                                            ?>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                    );
+                                </p>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <?php $i++; ?>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+    </body>
+</html>

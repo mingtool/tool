@@ -1,0 +1,159 @@
+<?php
+/* @var $point Orm\Map\PointModel*/
+$point = $this->point;
+?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,minimal-ui">
+    <title><?php echo $point->getName()?></title>
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="imdba">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=9">
+    <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE">
+    <link href="http://wap.visualbusiness.cn/panshan/css/bootstrap.css" rel="stylesheet">
+    <link href="http://wap.visualbusiness.cn/panshan/css/scenic.css" rel="stylesheet">
+    <style>
+        h2 {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        hr {
+            margin-left: 10%;
+            width: 80%;
+            height: 5px;
+        }
+
+        p {
+            margin-left: 15px;
+            margin-right: 15px;
+            text-align: left;
+        }
+
+        .scenic {
+            text-align: center;
+        }
+
+        .footer ol li {
+            width: 100%;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 44px;
+            line-height: 52px;
+        }
+
+        .footer ol {
+            margin: 0;
+            padding: 0;
+        }
+
+        .jinqi {
+            width: 7px;
+            height: 18px;
+            margin-right: 3px;
+            background: #416D77;
+            line-height: 18px;
+            margin-top: 3px;
+            margin-left: 15px;
+            float: left;
+        }
+
+        .body1 {
+            background-color: #f4f5f8 !important;
+        }
+
+        .img_top {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 50px;
+            FILTER: progid: DXImageTransform . Microsoft . Gradient(gradientType = 0, startColorStr = rgba(0, 0, 0, 0.8), endColorStr = rgba(0, 0, 0, 0)); /*IE 6 7 8*/
+            background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)); /* IE 10 */
+            background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)); /*火狐*/
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0))); /*谷歌*/
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0))); /* Safari 4-5, Chrome 1-9*/
+            background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)); /*Safari5.1 Chrome 10+*/
+            background: -o-linear-gradient(top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)); /*Opera 11.10+*/
+        }
+
+        .img_bottom {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            FILTER: progid: DXImageTransform . Microsoft . Gradient(gradientType = 0, startColorStr = rgba(0, 0, 0, 0), endColorStr = rgba(0, 0, 0, 0.3)); /*IE 6 7 8*/
+            background: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)); /* IE 10 */
+            background: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)); /*火狐*/
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.3))); /*谷歌*/
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.3))); /* Safari 4-5, Chrome 1-9*/
+            background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)); /*Safari5.1 Chrome 10+*/
+            background: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)); /*Opera 11.10+*/
+        }
+    </style>
+    <style type="text/css"></style>
+</head>
+<body style="background:#f4f5f8" class="body1">
+<div class="content" id="dowebok">
+    <div class="section section1">
+        <div id="content">
+            <div style="position:relative;top:0;left:0;">
+                <div class="img_top"></div>
+                <div class="img_bottom"></div>
+                <img src="http://wap.visualbusiness.cn/panshan/images/button10.png" onclick="window.location='index.html'" style="width:22px; position:absolute; top:20px; right:12px">
+                <img src="http://wap.visualbusiness.cn/panshan/images/button9.png" onclick="ShowWeiXinShareTips()" style="width:20px; position:absolute; top:18px; right:60px">
+                <h2 style="position:absolute; bottom:0px; left:15px; color:#FFF;"><?php echo $point->getName()?></h2>
+                <?php
+                if($point->getPics()){
+                    ?>
+                    <img src="<?php echo $point->getPics()?>" width="100%">
+                    <?php
+                }
+                ?>
+
+            </div>
+            <h2 style="text-align:left; text-indent:15px; color:#717171; font-size:17px; font-weight:400; background:#fff !important; margin:0; padding:0; height:44px; line-height:44px;">简介</h2>
+            <hr id="top_hr" style="margin:0 0 0 0; width:100%">
+            <div class="clearfix"></div>
+            <p style="margin-top:6px; line-height:24px;text-align:justify;">
+                <?php echo $point->getRemark()?>
+            </p>
+            <p>
+                电话:<a href="tel:<?php echo $point->getPhone()?>" class="num"><?php echo $point->getPhone()?></a>
+                <br><br>
+            </p>
+            <div class="footer" style="border-top: 1px #ECE9E9 solid; position:fixed; bottom:00px; left:0; background:white; padding-bottom:6px">
+                <ol>
+                    <li>
+                        <a href="<?php echo $point->getUrlAddress()?>">
+                            <img src="http://wap.visualbusiness.cn/panshan/images/b.png" style="width:18px; margin-right:6px;vertical-align:middle; height:18px; margin-top:-5px;">
+                            <span style="font-size:15px; font-weight:light; color:#717171;">看全景</span>
+                        </a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <br><br>
+    </div>
+</div>
+<script type="text/javascript" src="http://pi2016.com/App/Tpl/Home/Default/Public/js/jquery-1.10.2.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="http://wap.visualbusiness.cn/panshan/js/share.js"></script>
+
+<script type="text/javascript">
+    function ShowWeiXinShareTips(page) {
+        var div = '<div id="WeiXinShareTips" onclick="javascript:this.remove()" style="position: absolute;z-index: 20000;left: 0; top: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, .6);position: fixed; right:0"><img src="http://wap.visualbusiness.cn/panshan/images/share.png" style="float:right; margin-top:12px; margin-right:6px;" width="145" height="64"/></div>';
+        $('.content').append(div);
+    }
+</script>
+</body>
+</html>
+

@@ -1,0 +1,17 @@
+<?php
+/* @var $exc \Exception */
+$exc = $this->exc;
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Error: <?php echo $exc->getCode(); ?></title>
+        <link href="/static/assets/css/static.css" media="screen" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <h1><?php echo $exc->getCode(); ?></h1>
+        <h3>嘿, 哥们, 不好意思, 我刚才睡着了</h3>
+        <hr/>
+    </body>
+</html>

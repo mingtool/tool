@@ -1,0 +1,88 @@
+;; 配置文件示例
+;  注意 `yaf.environ` 此项目配置, 默认值为"product"
+;  这是Yaf的环境名称, 这指明了Yaf将要在INI配置中读取的节的名字
+;  开发环境请设置为 develop, 生产环境设置为 product
+[common]
+;; Yaf配置
+;  支持直接写PHP中的已定义常量, Windows 平台需要注意目录分割符的问题
+application.directory = APPLICATION_PATH "/application/"
+application.dispatcher.catchException = TRUE
+application.view.ext = "phtml"
+application.layout.directory = APPLICATION_PATH "/application/views/layouts"
+application.modules   = "Index,Order,Print,Rate,Task,Wangwang,Config,Vip,Sms,Callback,Monitor,Crm,Admin,Sold"
+application.baseUrl   = 'http://trade.huanleguang.com/'
+application.baseUrlV2 = 'http://v2trade.huanleguang.com/'
+application.bootstrap.plugins = 'LoginAuthPlugin'
+; 欢乐逛的项目编号
+application.appId     = 6
+application.serviceId = 6
+
+;; 资源配置
+;  Redis
+resources.redis.host = "127.0.0.1"
+resources.redis.port = 6379
+resources.redis.auth = null
+resources.redis.db   = 2
+; 键名的前缀, 由 phpRedis 这个扩展自动维护
+resources.redis.options.prefix = ""
+
+;queue队列
+;可选的驱动有mqs rabbitmq
+resources.queue.driver      = 'mqs'
+resources.queue.mqs.key     = '3xy0lcl1h7ybklshxz0jrr03'
+resources.queue.mqs.secret  = 'kS4KJh8prlbYoh+BhbrtvuQ2y7M='
+resources.queue.mqs.ownerid = '2oh8'
+
+; 千牛的签名验证
+; 安全码是属于机密数据, 部署时请自行填写, 恕不提交到版本库
+application.qianniu.key    = ''
+application.qianniu.secret = ''
+
+; 视图层使用的配置项
+; 在视图中 $this->getconfig('键名'), 键名不需要 'view'这一节
+view.baseUrl.cdn = 'http://trade.huanleguang.com/static/'
+
+;; 需要重置的PHP参数.
+;  这里重置只是无奈之举, 线上环境建议直接在系统ini文件上配置.
+phpsettings.date.timezone                   = "PRC"
+phpsettings.display_errors                  = 0
+phpsettings.display_startup_errors          = 0
+phpsettings.mbstring.internal_encoding      = "utf-8"
+phpsettings.session.cookie_httponly         = 1
+phpsettings.session.name                    = '_st_session'
+
+
+[product : common]
+
+
+[develop : common]
+; 开发环境, 请根据自己的需要进行调整.
+phpsettings.xdebug.default_enable  = 1
+phpsettings.display_errors         = 1
+phpsettings.display_startup_errors = 1
+phpsettings.session.save_handler   = 'redis'
+phpsettings.session.save_path      = "tcp://127.0.0.1:6379?weight=1&database=3"
+
+phpsettings.session.gc_maxlifetime = 86400
+
+; 御城河
+gwlog.isactive   = 1
+gwlog.redis.host = "127.0.0.1"
+gwlog.redis.db   = 0
+gwlog.app.name = "st"
+gwlog.listname = "hlg_gwlog"
+gwlog.server.ip = "172.16.2.213"
+
+;黑名单 踢用户下线
+gwlog.user.isactive = 1
+gwlog.user.redis.host = "127.0.0.1"
+gwlog.user.redis.port = 6379
+gwlog.user.redis.db   = 0
+gwlog.user.black.queue = 'tech:tb_seller_blacklist:st'
+gwlog.user.outlogin.queue = 'tech:session_relation_st_'
+
+;记录报错到elk
+elk.isactive = 1
+elk.redis.host = "127.0.0.1"
+elk.redis.port = 6379
+elk.redis.db = 0

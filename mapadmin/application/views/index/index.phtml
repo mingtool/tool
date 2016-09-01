@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>我们的项目-场景录</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="http://pi2016.com/App/Tpl/Home/Default/Public/css/bootstrap.min.css"/>
+    <!-- <link rel="stylesheet" type="text/css" href="http://pi2016.com/App/Tpl/Home/Default/Public/css/style.css"/>-->
+    <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+    <script type="text/javascript" src="http://pi2016.com/App/Tpl/Home/Default/Public/js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="http://pi2016.com/App/Tpl/Home/Default/Public/js/bootstrap.min.js"></script>
+    <script type="text/javascript">var APP = '', ROOT = '', PUBLIC = '/Public';</script>
+</head>
+<body>
+<style type="text/css">
+    p {
+        margin-left: 5px;
+        font-size: 14px;
+    }
+
+    .center {
+        box-sizing: unset;
+    }
+
+    .university-map {
+        top: 50px;
+    }
+    body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;}
+    #golist {display: none;}
+    @media (max-device-width: 780px){#golist{display: block !important;}}
+</style>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar"
+                    aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">场景录</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <div class="navbar-right">
+                <ul id="nav_box" class="nav navbar-nav sm">
+                    <li id="nav_0"><span class="fl_ico"></span><a href="/" title="首页"><span class="fl">首页</span></a>
+                    </li>
+
+                    <?php
+                    foreach ($this->grouplist as $k => $v) {
+                        ?>
+                        <li id="nav_0">
+                            <span class="fl_ico"></span>
+                            <a href="/?id=<?php echo $k; ?>" title="<?php echo $v; ?>"><span
+                                    class="fl"><?php echo $v; ?></span></a>
+                        </li>
+                        <?php
+                    }
+
+                    ?>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div id="allmap" style="width:100%;height:100%"></div>
+
+
+
+<script type="text/javascript">
+    var u = navigator.userAgent;
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+    var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+
+</script>
+<script type="text/javascript"
+        src="http://api.map.baidu.com/api?type=quick&ak=OTPg5YQ35e9khj9s4PoPH7SBZm8CAuI0&v=1.0"></script>
+<script type="text/javascript">
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point(118.149957, 24.493976);
+    map.centerAndZoom(point, 12);
+    map.addControl(new BMap.ZoomControl());
+    var data_info = [
+        <?php
+        if($this->points){
+        /* @var $item \Orm\Map\PointModel*/
+        foreach($this->points as $k=>$item){
+            if($k>0){
+                echo ',';
+            }
+        ?>
+        [<?php echo $item->getPoint(); ?>,"<h4 style='margin:0 0 5px 0;padding:0.2em 0'><?php echo $item->getName(); ?></h4><p style = 'margin:0;line-height:1.5;font-size:13px;text-indent:2em' ><?php echo $item->getRemark();?> </p> <p> <a href = '/index/index/detail/?id=<?php echo $item->getId() ?>' > 查看详情 </a> </p> </div> "]
+
+        <?php
+            }
+            }
+            ?>
+
+    ];
+    var opts = {
+        width: 300,     // 信息窗口宽度
+        height: 120,     // 信息窗口高度
+        enableMessage: true//设置允许信息窗发送短息
+    };
+    for (var i = 0; i < data_info.length; i++) {
+        var marker = new BMap.Marker(new BMap.Point(data_info[i][0], data_info[i][1]));  // 创建标注
+        var content = data_info[i][2];
+        map.addOverlay(marker);               // 将标注添加到地图中
+        addClickHandler(content, marker);
+    }
+    function addClickHandler(content, marker) {
+        marker.addEventListener("click", function (e) {
+
+                openInfo(content, e)
+            }
+        );
+    }
+    function openInfo(content, e) {
+        var p = e.target;
+        //console.log(p.point);
+        var point = new BMap.Point(p.point.lng, p.point.lat);
+        var infoWindow = new BMap.InfoWindow(content, opts);  // 创建信息窗口对象
+        map.openInfoWindow(infoWindow, point); //开启信息窗口
+    }
+
+</script>
+</body>
+</html>
