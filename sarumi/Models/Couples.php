@@ -80,17 +80,21 @@ class Couples extends Base
          */
         switch ($gettype) {
             case 1:
-                return intval($doc['div.ttl']->text());
+                $count =  intval($doc['div.ttl']->text());
                 break;
             case 2:
-                return ($doc['div.m-mlist']->count()) - 1;
-
+                $count = intval($doc['div.m-mlist']->count());
+                if($count<=0){
+                    $count = intval($doc['div.ttl']->text());
+                }else{
+                    $count = $count-2;
+                }
                 break;
             default:
-                return 0;
+                $count =  0;
                 break;
         }
-
+        return $count;
     }
 
     private function save2db($data)
@@ -283,7 +287,7 @@ class Couples extends Base
 
         $start = $start - ((date('N', $start) - 1) * 86400);
 
-        $sql = "select * from tag_grow_log where tag_id in(1,2) and daytime between " . $start . " and " . $end;
+        $sql = "select * from tag_grow_log where tag_id in(1,2) and daytime between " . $start . " and " . $end." order by daytime";
 
         $diff   = [];
         $result = $this->db->query($sql);
