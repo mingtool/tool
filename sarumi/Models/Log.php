@@ -61,7 +61,8 @@ class Log extends Base
                 foreach ($tags as $tag_id => $count) {
                     $data            = [];
                     $data['tag_id']  = $tag_id;
-                    $data['num']     = $count - $a[$day][$tag_id];
+
+                    $data['num']     = !empty($count) && !empty($a[$day][$tag_id]) ? $count - $a[$day][$tag_id] : 0;
                     $data['daytime'] = $day;
                     $sql             = "insert tag_grow_log set
             tag_id=" . $data['tag_id'] . ",num=" . $data['num'] . ",week=" . date('w', $data['daytime']) . ",daytime=" . $data['daytime'];

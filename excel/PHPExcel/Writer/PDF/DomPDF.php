@@ -1,8 +1,19 @@
 <?php
+
+namespace PHPExcel\Writer\PDF;
+
+/**  Require DomPDF library */
+$pdfRendererClassFile = \PHPExcel\Settings::getPdfRendererPath() . '/dompdf_config.inc.php';
+if (file_exists($pdfRendererClassFile)) {
+    require_once $pdfRendererClassFile;
+} else {
+    throw new \PHPExcel\Writer\Exception('Unable to load PDF Rendering library');
+}
+
 /**
- *  PHPExcel
+ *  PHPExcel_Writer_PDF_DomPDF
  *
- *  Copyright (c) 2006 - 2014 PHPExcel
+ *  Copyright (c) 2006 - 2015 PHPExcel
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -20,46 +31,29 @@
  *
  *  @category    PHPExcel
  *  @package     PHPExcel_Writer_PDF
- *  @copyright   Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ *  @copyright   Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
  *  @license     http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- *  @version     1.8.0, 2014-03-02
+ *  @version     ##VERSION##, ##DATE##
  */
-
-
-/**  Require DomPDF library */
-$pdfRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/dompdf_config.inc.php';
-if (file_exists($pdfRendererClassFile)) {
-    require_once $pdfRendererClassFile;
-} else {
-    throw new PHPExcel_Writer_Exception('Unable to load PDF Rendering library');
-}
-
-/**
- *  PHPExcel_Writer_PDF_DomPDF
- *
- *  @category    PHPExcel
- *  @package     PHPExcel_Writer_PDF
- *  @copyright   Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
- */
-class PHPExcel_Writer_PDF_DomPDF extends PHPExcel_Writer_PDF_Core implements PHPExcel_Writer_IWriter
+class DomPDF extends Core implements \PHPExcel\Writer\IWriter
 {
     /**
-     *  Create a new PHPExcel_Writer_PDF
+     *  Create a new DomPDF Writer instance
      *
-     *  @param   PHPExcel    $phpExcel    PHPExcel object
+     *  @param   \PHPExcel\Spreadsheet    $phpExcel    Spreadsheet object
      */
-    public function __construct(PHPExcel $phpExcel)
+    public function __construct(\PHPExcel\Spreadsheet $phpExcel)
     {
         parent::__construct($phpExcel);
     }
 
     /**
-     *  Save PHPExcel to file
+     *  Save Spreadsheet to file
      *
      *  @param   string     $pFilename   Name of the file to save as
-     *  @throws  PHPExcel_Writer_Exception
+     *  @throws  \PHPExcel\Writer\Exception
      */
-    public function save($pFilename = NULL)
+    public function save($pFilename = null)
     {
         $fileHandle = parent::prepareForSave($pFilename);
 
@@ -68,25 +62,23 @@ class PHPExcel_Writer_PDF_DomPDF extends PHPExcel_Writer_PDF_Core implements PHP
 
         //  Check for paper size and page orientation
         if (is_null($this->getSheetIndex())) {
-            $orientation = ($this->_phpExcel->getSheet(0)->getPageSetup()->getOrientation()
-                == PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE)
-                    ? 'L'
-                    : 'P';
-            $printPaperSize = $this->_phpExcel->getSheet(0)->getPageSetup()->getPaperSize();
-            $printMargins = $this->_phpExcel->getSheet(0)->getPageMargins();
+            $orientation = ($this->phpExcel->getSheet(0)->getPageSetup()->getOrientation()
+                == \PHPExcel\Worksheet\PageSetup::ORIENTATION_LANDSCAPE) ? 'L' : 'P';
+            $printPaperSize = $this->phpExcel->getSheet(0)->getPageSetup()->getPaperSize();
+            $printMargins = $this->phpExcel->getSheet(0)->getPageMargins();
         } else {
-            $orientation = ($this->_phpExcel->getSheet($this->getSheetIndex())->getPageSetup()->getOrientation()
-                == PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE)
-                    ? 'L'
-                    : 'P';
-            $printPaperSize = $this->_phpExcel->getSheet($this->getSheetIndex())->getPageSetup()->getPaperSize();
-            $printMargins = $this->_phpExcel->getSheet($this->getSheetIndex())->getPageMargins();
+            $orientation = ($this->phpExcel->getSheet($this->getSheetIndex())->getPageSetup()->getOrientation()
+                == \PHPExcel\Worksheet\PageSetup::ORIENTATION_LANDSCAPE) ? 'L' : 'P';
+            $printPaperSize = $this->phpExcel->getSheet($this->getSheetIndex())->getPageSetup()->getPaperSize();
+            $printMargins = $this->phpExcel->getSheet($this->getSheetIndex())->getPageMargins();
         }
+
+        $orientation = ($orientation == 'L') ? 'landscape' : 'portrait';
 
         //  Override Page Orientation
         if (!is_null($this->getOrientation())) {
-            $orientation = ($this->getOrientation() == PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT)
-                ? PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT
+            $orientation = ($this->getOrientation() == \PHPExcel\Worksheet\PageSetup::ORIENTATION_DEFAULT)
+                ? \PHPExcel\Worksheet\PageSetup::ORIENTATION_PORTRAIT
                 : $this->getOrientation();
         }
         //  Override Paper Size
@@ -94,18 +86,17 @@ class PHPExcel_Writer_PDF_DomPDF extends PHPExcel_Writer_PDF_Core implements PHP
             $printPaperSize = $this->getPaperSize();
         }
 
-        if (isset(self::$_paperSizes[$printPaperSize])) {
-            $paperSize = self::$_paperSizes[$printPaperSize];
+        if (isset(self::$paperSizes[$printPaperSize])) {
+            $paperSize = self::$paperSizes[$printPaperSize];
         }
 
-        $orientation = ($orientation == 'L') ? 'landscape' : 'portrait';
 
         //  Create PDF
         $pdf = new DOMPDF();
         $pdf->set_paper(strtolower($paperSize), $orientation);
 
         $pdf->load_html(
-            $this->generateHTMLHeader(FALSE) .
+            $this->generateHTMLHeader(false) .
             $this->generateSheetData() .
             $this->generateHTMLFooter()
         );
@@ -114,7 +105,6 @@ class PHPExcel_Writer_PDF_DomPDF extends PHPExcel_Writer_PDF_Core implements PHP
         //  Write to file
         fwrite($fileHandle, $pdf->output());
 
-		parent::restoreStateAfterSave($fileHandle);
+        parent::restoreStateAfterSave($fileHandle);
     }
-
 }

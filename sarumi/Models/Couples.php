@@ -23,7 +23,6 @@ class Couples extends Base
 
     protected $works = ['日', '一', '二', '三', '四', '五', '六'];
 
-
     public function __construct()
     {
         $this->config  = \Tool::getConf('Config');
@@ -49,7 +48,7 @@ class Couples extends Base
             $this->exportLog($item[1] . '--tag数:' . $count);
         }
         $this->save2db($data);
-        if(date('H')==0){
+        if (date('H') == 0) {
             $this->savegrow2db();
         }
         $this->sendMail($data);
@@ -80,18 +79,18 @@ class Couples extends Base
          */
         switch ($gettype) {
             case 1:
-                $count =  intval($doc['div.ttl']->text());
+                $count = intval($doc['div.ttl']->text());
                 break;
             case 2:
                 $count = intval($doc['div.m-mlist']->count());
-                if($count<=0){
+                if ($count <= 0) {
                     $count = intval($doc['div.ttl']->text());
-                }else{
-                    $count = $count-2;
+                } else {
+                    $count = $count - 3;
                 }
                 break;
             default:
-                $count =  0;
+                $count = 0;
                 break;
         }
         return $count;
@@ -126,7 +125,6 @@ class Couples extends Base
             }
 
             $body = '<p>' . date('Y-m-d H:i:s', $this->now) . '</p>';
-
 
             if (2 == $type) {
                 if (!in_array(date('H'), $hours)) {
@@ -227,7 +225,6 @@ class Couples extends Base
         return false;
     }
 
-
     /**
      * 差值
      */
@@ -236,24 +233,23 @@ class Couples extends Base
         return '<p>毒差:' . ($data[1] - $data[2]) . '----冷差:' . ($data[1] - $data[5]) . '</p>';
     }
 
-
     public function savegrow2db()
     {
-        $end   = time() + 10;
-        $start = strtotime(date('Y-m-d')) - 86400;
-        $sql   = "select * from tag_count_log where logtime BETWEEN $start AND $end";
-
+        $end    = time() + 10;
+        $start  = strtotime(date('Y-m-d')) - 86400;
+        $sql    = "select * from tag_count_log where logtime BETWEEN $start AND $end";
         $result = $this->db->query($sql);
+        var_dump($result);exit;
         if ($result) {
-            $a   = $b = [];
+            $a   = $b   = [];
             $day = '';
             while ($row = $result->fetch_array()) {
                 $logtime = $row['logtime'];
                 if (0 == date('H', $logtime)) {
                     $day                     = strtotime(date('Y-m-d', $logtime));
                     $now                     = $day - 86400;
-                    $a[$day][$row['tag_id']] = $row['count'];
-                    $b[$now][$row['tag_id']] = $row['count'];
+                    $a[$day][$row['tag_id']] = intval($row['count']);
+                    $b[$now][$row['tag_id']] = intval($row['count']);
                 }
             }
             unset($a[$day], $b[$start - 86400]);
@@ -276,7 +272,6 @@ class Couples extends Base
         return true;
     }
 
-
     /**
      * 本月增值
      */
@@ -287,7 +282,7 @@ class Couples extends Base
 
         $start = $start - ((date('N', $start) - 1) * 86400);
 
-        $sql = "select * from tag_grow_log where tag_id in(1,2) and daytime between " . $start . " and " . $end." order by daytime";
+        $sql = "select * from tag_grow_log where tag_id in(1,2) and daytime between " . $start . " and " . $end . " order by daytime";
 
         $diff   = [];
         $result = $this->db->query($sql);
@@ -341,6 +336,5 @@ class Couples extends Base
 
         return $string;
     }
-
 
 }

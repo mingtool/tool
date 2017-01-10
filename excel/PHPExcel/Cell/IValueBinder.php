@@ -1,8 +1,11 @@
 <?php
+
+namespace PHPExcel\Cell;
+
 /**
- * PHPExcel
+ * PHPExcel_Cell_IValueBinder
  *
- * Copyright (c) 2006 - 2014 PHPExcel
+ * Copyright (c) 2006 - 2015 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,27 +23,18 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Cell
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    1.8.0, 2014-03-02
+ * @version    ##VERSION##, ##DATE##
  */
-
-
-/**
- * PHPExcel_Cell_IValueBinder
- *
- * @category   PHPExcel
- * @package    PHPExcel_Cell
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
- */
-interface PHPExcel_Cell_IValueBinder
+interface IValueBinder
 {
     /**
      * Bind value to a cell
      *
-     * @param  PHPExcel_Cell $cell    Cell to bind value to
+     * @param  \PHPExcel\Cell $cell    Cell to bind value to
      * @param  mixed $value           Value to bind in cell
      * @return boolean
      */
-    public function bindValue(PHPExcel_Cell $cell, $value = NULL);
+    public function bindValue(\PHPExcel\Cell $cell, $value = null);
 }

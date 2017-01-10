@@ -1,8 +1,11 @@
 <?php
+
+namespace PHPExcel\Reader\Excel5;
+
 /**
- * PHPExcel
+ * PHPExcel_Reader_Excel5_MD5
  *
- * Copyright (c) 2006 - 2014 PHPExcel
+ * Copyright (c) 2006 - 2015 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,27 +23,17 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Reader_Excel5
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt        LGPL
- * @version    1.8.0, 2014-03-02
+ * @version    ##VERSION##, ##DATE##
  */
-
-
-/**
- * PHPExcel_Reader_Excel5_MD5
- *
- * @category        PHPExcel
- * @package                PHPExcel_Reader_Excel5
- * @copyright        Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
- */
-class PHPExcel_Reader_Excel5_MD5
+class MD5
 {
     // Context
     private $a;
     private $b;
     private $c;
     private $d;
-
 
     /**
      * MD5 stream constructor
@@ -49,7 +42,6 @@ class PHPExcel_Reader_Excel5_MD5
     {
         $this->reset();
     }
-
 
     /**
      * Reset the MD5 stream context
@@ -62,10 +54,9 @@ class PHPExcel_Reader_Excel5_MD5
         $this->d = 0x10325476;
     }
 
-
     /**
      * Get MD5 stream context
-     * 
+     *
      * @return string
      */
     public function getContext()
@@ -82,10 +73,9 @@ class PHPExcel_Reader_Excel5_MD5
         return $s;
     }
 
-
     /**
      * Add data to context
-     * 
+     *
      * @param string $data Data to add
      */
     public function add($data)
@@ -97,10 +87,10 @@ class PHPExcel_Reader_Excel5_MD5
         $C = $this->c;
         $D = $this->d;
 
-        $F = array('PHPExcel_Reader_Excel5_MD5','F');
-        $G = array('PHPExcel_Reader_Excel5_MD5','G');
-        $H = array('PHPExcel_Reader_Excel5_MD5','H');
-        $I = array('PHPExcel_Reader_Excel5_MD5','I');
+        $F = ['self','f'];
+        $G = ['self','g'];
+        $H = ['self','h'];
+        $I = ['self','i'];
 
         /* ROUND 1 */
         self::step($F, $A, $B, $C, $D, $words[0], 7, 0xd76aa478);
@@ -180,30 +170,25 @@ class PHPExcel_Reader_Excel5_MD5
         $this->d = ($this->d + $D) & 0xffffffff;
     }
 
-
-    private static function F($X, $Y, $Z)
+    private static function f($X, $Y, $Z)
     {
         return (($X & $Y) | ((~ $X) & $Z)); // X AND Y OR NOT X AND Z
     }
 
-
-    private static function G($X, $Y, $Z)
+    private static function g($X, $Y, $Z)
     {
         return (($X & $Z) | ($Y & (~ $Z))); // X AND Z OR Y AND NOT Z
     }
 
-
-    private static function H($X, $Y, $Z)
+    private static function h($X, $Y, $Z)
     {
         return ($X ^ $Y ^ $Z); // X XOR Y XOR Z
     }
 
-
-    private static function I($X, $Y, $Z)
+    private static function i($X, $Y, $Z)
     {
         return ($Y ^ ($X | (~ $Z))) ; // Y XOR (X OR NOT Z)
     }
-
 
     private static function step($func, &$A, $B, $C, $D, $M, $s, $t)
     {
@@ -211,7 +196,6 @@ class PHPExcel_Reader_Excel5_MD5
         $A = self::rotate($A, $s);
         $A = ($B + $A) & 0xffffffff;
     }
-
 
     private static function rotate($decimal, $bits)
     {
