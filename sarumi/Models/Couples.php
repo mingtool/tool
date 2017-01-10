@@ -210,7 +210,8 @@ class Couples extends Base
         $result = $this->db->query($sql);
         $data   = [];
         if ($result) {
-            while ($row = $result->fetch_array()) {
+
+            while ($row = $result->fetch_assoc()) {
                 $logtime = $row['logtime'];
                 if (in_array($row['tag_id'], $tagids)) {
 
@@ -218,8 +219,10 @@ class Couples extends Base
                 }
 
             }
+            if ($row) {
+                return ['time' => date('Y-m-d H:i:s', $logtime), 'data' => $data];
+            }
 
-            return ['time' => date('Y-m-d H:i:s', $logtime), 'data' => $data];
         }
 
         return false;
@@ -239,11 +242,12 @@ class Couples extends Base
         $start  = strtotime(date('Y-m-d')) - 86400;
         $sql    = "select * from tag_count_log where logtime BETWEEN $start AND $end";
         $result = $this->db->query($sql);
-        var_dump($result);exit;
+
         if ($result) {
             $a   = $b   = [];
             $day = '';
-            while ($row = $result->fetch_array()) {
+            while ($row = $result->fetch_assoc()) {
+
                 $logtime = $row['logtime'];
                 if (0 == date('H', $logtime)) {
                     $day                     = strtotime(date('Y-m-d', $logtime));
@@ -252,13 +256,14 @@ class Couples extends Base
                     $b[$now][$row['tag_id']] = intval($row['count']);
                 }
             }
+
             unset($a[$day], $b[$start - 86400]);
 
             foreach ($b as $day => $tags) {
                 foreach ($tags as $tag_id => $count) {
                     $data            = [];
                     $data['tag_id']  = $tag_id;
-                    $data['num']     = $count - $a[$day][$tag_id];
+                    $data['num']     = (empty($count) || empty($a[$day][$tag_id])) ? 0 : $count - $a[$day][$tag_id];
                     $data['daytime'] = $day;
                     $sql             = "insert tag_grow_log set
             tag_id=" . $data['tag_id'] . ",num=" . $data['num'] . ",week=" . date('w', $data['daytime']) . ",daytime=" . $data['daytime'];
@@ -287,8 +292,7 @@ class Couples extends Base
         $diff   = [];
         $result = $this->db->query($sql);
         if ($result) {
-
-            while ($row = $result->fetch_array()) {
+            while ($row = $result->fetch_assoc()) {
                 $diff[$row['daytime']][$row['tag_id']] = $row['num'];
             }
 
@@ -303,18 +307,27 @@ class Couples extends Base
         $weeks  = $this->works;
         $string = "<table><tr></tr>";
 
-        foreach ($data as $day => $c) {
+        $begin = strtotime(date('Y-m-1'));
 
-            $b = date('N', $day) % 7 == 1 ? true : false;
+        $n     = date('N', $begin) - 1;
+        $begin = $n ? $begin - ($n * 86400) : $begin;
+        $t     = date('t');
+        for ($i = 0; $i < $t + $n; $i++) {
+
+            $now = $begin + ($i * 86400);
+
+            $b = date('N', $now) % 7 == 1 ? true : false;
             if ($b) {
-                if (date('d', $day) > 1) {
+                if (date('d', $now) > 1) {
                     $string .= "</tr><tr style='height: 100px;vertical-align: bottom; border-bottom-color: #0b0b0b' >";
                 } else {
                     $string .= "<tr style='height: 100px;vertical-align: bottom; border-bottom-color: #0b0b0b' >";
                 }
             }
 
-            $string .= "<td>
+            if (isset($data[$now])) {
+                $c = $data[$now];
+                $string .= "<td>
                     <table>
                     <tr style='vertical-align: bottom;'>
                     <td>" . $c[1] . "
@@ -325,11 +338,27 @@ class Couples extends Base
                     </td>
                     </tr>
                     <tr>
-                    <td colspan='2'>" . date('md', $day) . "(" . ($weeks[date('w', $day)]) . ")" . "</td>
+                    <td colspan='2'>" . date('md', $now) . "(" . ($weeks[date('w', $now)]) . ")" . "</td>
                     </tr>
                     </table>
                 </td>";
 
+            } else {
+                $string .= "<td>
+                    <table>
+                    <tr style='vertical-align: bottom;'>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan='2'>" . date('md', $now) . "(" . ($weeks[date('w', $now)]) . ")" . "</td>
+                    </tr>
+                    </table>
+                </td>";
+
+            }
         }
 
         $string .= "</table>";

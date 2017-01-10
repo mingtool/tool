@@ -22,13 +22,10 @@ spl_autoload_register(function ($className) {
 include_once DIR . '/Lib/PHPMailer/PHPMailerAutoload.php';
 
 echo PHP_EOL;
-echo '==begin:'.date('Y-m-d H:i:s').PHP_EOL;
-$log = new \Log();
+echo '==begin:' . date('Y-m-d H:i:s') . PHP_EOL;
+$log = new \Couples();
 
-//$log->getData();
-echo $log->savegrow2db();
+// echo $log->savegrow2db();
+echo $log->monthData();
 
-
-echo '==end:'.date('Y-m-d H:i:s').PHP_EOL;
-
-
+echo '==end:' . date('Y-m-d H:i:s') . PHP_EOL;
